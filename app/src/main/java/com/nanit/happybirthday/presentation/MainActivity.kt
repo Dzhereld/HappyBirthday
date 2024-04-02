@@ -6,11 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nanit.happybirthday.presentation.ipaddress.IPAddressScreen
+import com.nanit.happybirthday.presentation.ipaddress.IPAddressUiState
 import com.nanit.happybirthday.presentation.theme.HappyBirthdayTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,7 +27,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    IPAddressScreen(
+                        state = viewModel.uiState.value,
+                        onEvent = { uiEvent -> viewModel.handleUiEvent(uiEvent) }
+                    )
                 }
             }
         }
@@ -34,17 +38,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
+@Preview(name = "original image", device = "spec:shape=Normal,width=361,height=592,unit=dp,dpi=480")
 fun GreetingPreview() {
     HappyBirthdayTheme {
-        Greeting("Android")
+        IPAddressScreen(IPAddressUiState.Empty)
     }
 }

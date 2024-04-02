@@ -30,7 +30,7 @@ class ChildProfileRemoteSourceImpl @Inject constructor(private val client: HttpC
     override suspend fun connectToSocket(ipAddress: String, port: Int): Result<String> {
         return withContext(Dispatchers.IO) {
             try {
-                println("connect To Socket: Success")
+                println("connecting To Socket")
                 webSocket = client.webSocketSession(
                     method = HttpMethod.Get,
                     host = ipAddress,
@@ -51,13 +51,15 @@ class ChildProfileRemoteSourceImpl @Inject constructor(private val client: HttpC
         }
     }
 
-    override suspend fun sendMessage(message: String) {
-        withContext(Dispatchers.IO) {
+    override suspend fun sendMessage(message: String): Result<String> {
+        return withContext(Dispatchers.IO) {
             try {
                 webSocket?.send(Frame.Text(message))
                 println("send Message: $message")
+                Result.success("Success")
             } catch (e: Exception) {
-                e.printStackTrace()
+                println("send Message: Failed")
+                Result.failure(e)
             }
         }
     }

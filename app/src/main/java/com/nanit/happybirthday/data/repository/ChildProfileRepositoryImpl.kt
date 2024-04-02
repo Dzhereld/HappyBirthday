@@ -12,8 +12,8 @@ class ChildProfileRepositoryImpl @Inject constructor(private val remoteDataSourc
         return remoteDataSource.connectToSocket(ipAddress, port)
     }
 
-    override suspend fun sendMessage(message: String) {
-        remoteDataSource.sendMessage(message)
+    override suspend fun sendMessage(message: String): Result<String> {
+        return remoteDataSource.sendMessage(message)
     }
 
     override fun observeChildProfile(): Flow<ChildProfile> {

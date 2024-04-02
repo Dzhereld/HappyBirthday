@@ -9,7 +9,7 @@ interface ChildProfileRemoteSource {
         port: Int
     ): Result<String>
 
-    suspend fun sendMessage(message: String)
+    suspend fun sendMessage(message: String): Result<String>
 
     fun receiveChildProfile(): Flow<ChildProfile>
 

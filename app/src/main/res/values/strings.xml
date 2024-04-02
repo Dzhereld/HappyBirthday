@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">HappyBirthday</string>
+    <string name="connection_error">Connection error. Check the IP address with the port and verify the availability of the WebSocket server</string>
+    <string name="problem_with_getting_theme">Problem with getting theme. Check the availability of the WebSocket server or update the version with the new theme</string>
+    <string name="connect">Connect</string>
+    <string name="in_process">"In process... "</string>
+    <string name="done">Done!</string>
+    <string name="ip_address">IP Address</string>
+    <string name="port">Port</string>
 </resources>

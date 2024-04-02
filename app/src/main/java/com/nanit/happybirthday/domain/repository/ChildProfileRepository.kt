@@ -9,7 +9,7 @@ interface ChildProfileRepository {
         port: Int
     ): Result<String>
 
-    suspend fun sendMessage(message: String)
+    suspend fun sendMessage(message: String): Result<String>
 
     fun observeChildProfile(): Flow<ChildProfile>
 
