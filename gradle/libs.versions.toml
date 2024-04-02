@@ -10,11 +10,13 @@ lifecycleRuntimeKtx = "2.7.0"
 lifecycleViewmodelCompose = "2.7.0"
 activityCompose = "1.8.2"
 composeBom = "2024.03.00"
+constraintlayout = "1.0.1"
 coroutines = "1.8.0"
 dagger = "2.50"
 hilt = "2.50"
 ktor = "2.3.9"
 serializationJson = "1.5.0"
+androidJoda = "2.10.12.2"
 
 [libraries]
 
@@ -29,6 +31,7 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout" }
 
 #Coroutines
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -50,6 +53,9 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 
 #Serialization
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serializationJson" }
+
+#Joda Time
+android-joda = { module = "net.danlew:android.joda", version.ref = "androidJoda" }
 
 #Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }

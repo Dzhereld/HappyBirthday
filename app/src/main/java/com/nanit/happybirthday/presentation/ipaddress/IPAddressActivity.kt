@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nanit.happybirthday.presentation.common.theme.NeutralTheme
 import com.nanit.happybirthday.presentation.profile.ChildProfileActivity
-import com.nanit.happybirthday.presentation.common.theme.HappyBirthdayTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +33,7 @@ class IPAddressActivity : ComponentActivity() {
                 }
             }
 
-            HappyBirthdayTheme {
+            NeutralTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -52,7 +52,7 @@ class IPAddressActivity : ComponentActivity() {
 @Composable
 @Preview(name = "original image", device = "spec:shape=Normal,width=361,height=592,unit=dp,dpi=480")
 fun GreetingPreview() {
-    HappyBirthdayTheme {
+    NeutralTheme {
         IPAddressScreen(IPAddressUiState.Empty)
     }
 }

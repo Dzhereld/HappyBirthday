@@ -18,6 +18,7 @@
         <activity
             android:name=".presentation.ipaddress.IPAddressActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/Theme.HappyBirthday">
             <intent-filter>
@@ -26,7 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.profile.ChildProfileActivity"/>
+        <activity
+            android:name=".presentation.profile.ChildProfileActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

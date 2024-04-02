@@ -96,7 +96,7 @@ private val LightPelicanImages = Images(
 @Composable
 fun HappyBirthdayTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    colors: ColorScheme = NeutralColorScheme,
+    colors: ColorScheme,
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
