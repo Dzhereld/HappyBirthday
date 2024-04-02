@@ -2,14 +2,13 @@ package com.nanit.happybirthday.data.repository
 
 import com.nanit.happybirthday.data.remote.ChildProfileRemoteSource
 import com.nanit.happybirthday.domain.entity.ChildProfile
-import com.nanit.happybirthday.domain.entity.ConnectionResult
 import com.nanit.happybirthday.domain.repository.ChildProfileRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ChildProfileRepositoryImpl @Inject constructor(private val remoteDataSource: ChildProfileRemoteSource) :
     ChildProfileRepository {
-    override suspend fun connectToServer(ipAddress: String, port: String): Flow<ConnectionResult> {
+    override suspend fun connectToServer(ipAddress: String, port: Int): Result<String> {
         return remoteDataSource.connectToSocket(ipAddress, port)
     }
 
