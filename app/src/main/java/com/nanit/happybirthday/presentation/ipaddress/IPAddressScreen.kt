@@ -53,7 +53,7 @@ fun IPAddressScreen(
         Spacer(modifier = Modifier.height(32.dp))
         ErrorTextIfNeeded(state)
         Button(
-            enabled = isConnectButtonEnabled && state != IPAddressUiState.Loading,
+            enabled = isConnectButtonEnabled && state != IPAddressUiState.Loading && state != IPAddressUiState.Success,
             onClick = { onEvent(IPAddressUiEvent.OnConnectionClick(filledIPAddress, filledPort)) }
         ) {
             Text(text = stringResource(state.getActionButtonText()))
@@ -74,6 +74,11 @@ private fun ErrorTextIfNeeded(state: IPAddressUiState) {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
+        IPAddressUiState.Success -> {
+            Text(text = stringResource(R.string.waiting_for_the_birthday_event))
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
         else -> Unit
     }
 }
@@ -91,4 +96,6 @@ private fun IPAddressUiState.getActionButtonText() =
         IPAddressUiState.Success -> {
             R.string.done
         }
+
+        IPAddressUiState.OpenBirthdayScreen -> R.string.done
     }

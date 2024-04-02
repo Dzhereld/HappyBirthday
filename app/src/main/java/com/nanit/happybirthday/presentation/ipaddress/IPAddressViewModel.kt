@@ -35,7 +35,8 @@ class IPAddressViewModel @Inject constructor(private val repository: ChildProfil
             _uiState.value = IPAddressUiState.Loading
             repository.connectToServer(ipAddress, port)
                 .onSuccess {
-                    sendCommandToFillProfile()
+                    _uiState.value = IPAddressUiState.Success
+                    startObservingBirthdayEvent()
                 }
                 .onFailure {
                     _uiState.value = IPAddressUiState.ErrorConnection
@@ -43,26 +44,18 @@ class IPAddressViewModel @Inject constructor(private val repository: ChildProfil
         }
     }
 
-    private suspend fun sendCommandToFillProfile() {
-        repository.sendMessage(COMMAND_TO_FILL_CHILD_PROFILE)
-            .onSuccess {
-                repository.observeChildProfile()
-                    .catch {
+    private suspend fun startObservingBirthdayEvent() {
+        repository.observeBirthdayEvent()
+            .collect { result ->
+                result.onSuccess { childProfile ->
+                    if (childProfile.theme != ThemeType.UNDEFINED)
+                        _uiState.value = IPAddressUiState.OpenBirthdayScreen
+                    else
                         _uiState.value = IPAddressUiState.ErrorTheme
-                    }
-                    .collect { childProfile ->
-                        if (childProfile.theme != ThemeType.UNDEFINED)
-                            _uiState.value = IPAddressUiState.Success
-                        else
-                            _uiState.value = IPAddressUiState.ErrorTheme
-                    }
-            }
-            .onFailure {
-                _uiState.value = IPAddressUiState.ErrorConnection
+                }.onFailure {
+                    _uiState.value = IPAddressUiState.ErrorTheme
+                }
             }
     }
 
-    companion object {
-        const val COMMAND_TO_FILL_CHILD_PROFILE = "HappyBirthday"
-    }
 }

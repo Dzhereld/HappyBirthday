@@ -24,7 +24,7 @@ class IPAddressActivity : ComponentActivity() {
             val viewModel: IPAddressViewModel = viewModel()
 
             val uiState = viewModel.uiState.value
-            if (uiState == IPAddressUiState.Success) {
+            if (uiState == IPAddressUiState.OpenBirthdayScreen) {
                 with(LocalContext.current) {
                     startActivity(Intent(this, ChildProfileActivity::class.java)
                         .apply {

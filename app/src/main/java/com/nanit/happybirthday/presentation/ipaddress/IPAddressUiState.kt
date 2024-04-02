@@ -7,6 +7,7 @@ sealed interface IPAddressUiState : ScreenUiState {
 
     data object Loading : IPAddressUiState
     data object Success : IPAddressUiState
+    data object OpenBirthdayScreen : IPAddressUiState
     data object ErrorConnection : IPAddressUiState
 
     data object ErrorTheme : IPAddressUiState

@@ -10,7 +10,6 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -19,22 +18,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import java.io.IOException
+import org.joda.time.DateTime
+import org.joda.time.Months
 import javax.inject.Inject
 
 class ChildProfileRemoteSourceImpl @Inject constructor(
     private val client: HttpClient
 ) :
     ChildProfileRemoteSource {
-    private var webSocket: WebSocketSession? = null
+
+    private var webSocketSession: WebSocketSession? = null
 
     private var webSocketScope: CoroutineScope? = null
 
@@ -46,32 +47,17 @@ class ChildProfileRemoteSourceImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 println("connecting To Socket")
-                webSocket = client.webSocketSession(
+                webSocketSession = client.webSocketSession(
                     method = HttpMethod.Get,
                     host = ipAddress,
                     port = port,
-                    path = PATH_CHILD_PROFILE
+                    path = PATH_NANIT
                 )
-                if (webSocket?.isActive == true) {
+                val socketConnection = webSocketSession
+                if (socketConnection?.isActive == true) {
                     println("connect To Socket: Success")
-                    try {
-                        webSocket?.incoming
-                            ?.receiveAsFlow()
-                            ?.filter { it is Frame.Text }
-                            ?.mapNotNull {
-                                (it as? Frame.Text)
-                                    ?.readText()
-                                    .also {
-                                        println("receive Message: $it")
-                                    }
-                            }
-                            ?.reTranslateTo(receiveMessageStateFlow, webSocketScope)
-                        Result.success("Success")
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        println("error after receiving message: ${e.message}")
-                        Result.failure(e)
-                    }
+                    sendMessageToGetBirthdayInfo(socketConnection)
+                    return@withContext startObservingIncomingMessage(socketConnection)
                 } else {
                     println("connect To Socket: Failed")
                     Result.failure(IllegalStateException())
@@ -83,35 +69,77 @@ class ChildProfileRemoteSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun sendMessage(message: String): Result<String> {
-        return withContext(Dispatchers.IO) {
-            try {
-                webSocket?.send(Frame.Text(message))
-                println("send Message: $message")
-                Result.success("Success")
-            } catch (e: Exception) {
-                println("send Message: Failed")
-                Result.failure(e)
-            }
+    private suspend fun sendMessageToGetBirthdayInfo(session: WebSocketSession): Result<Unit> {
+        return runCatching {
+            session.send(Frame.Text(COMMAND_TO_GET_BIRTHDAY))
+        }.onSuccess {
+            println("send message to get birthday info: Success")
+        }.onFailure {
+            println("send message to get birthday info: Failed")
         }
     }
 
-    override fun receiveChildProfile(): Flow<ChildProfile> {
+    private fun startObservingIncomingMessage(socketConnection: WebSocketSession): Result<String> {
+        try {
+            socketConnection.incoming
+                .receiveAsFlow()
+                .filter { it is Frame.Text }
+                .mapNotNull {
+                    (it as? Frame.Text)
+                        ?.readText()
+                        .also {
+                            println("receive Message: $it")
+                        }
+                }
+                .reTranslateTo(receiveMessageStateFlow, webSocketScope)
+            return Result.success("Success")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("error after receiving message: ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override fun observeBirthdayEvent(): Flow<Result<ChildProfile>> {
         return receiveMessageStateFlow.asStateFlow()
-            .mapNotNull { message ->
-                if (message.isNotEmpty()) {
-                    Json.decodeFromString<ChildProfileRemote>(message).mapToChildProfile()
-                } else {
-                    null
+            .filter(String::isNotEmpty)
+            .map { message ->
+                runCatching {
+                    Json.decodeFromString<ChildProfileRemote>(message)
                 }
             }
-            .filter { it.ageInMonths <= NINE_YEARS_IN_MONTH }
+            .filter { result ->
+                val epochTime = result.getOrNull()?.dob ?: return@filter true
+                return@filter verifyDate(epochTime)
+            }
+            .map { result ->
+                result.map(ChildProfileRemote::mapToChildProfile)
+            }
+    }
+
+    private fun verifyDate(milliseconds: Long): Boolean {
+        val currentDate = DateTime.now()
+        val checkDate = DateTime(milliseconds)
+        val differentMonths = Months.monthsBetween(checkDate, currentDate).months
+
+        return when {
+            differentMonths == 0 || differentMonths > NINE_YEARS_IN_MONTH -> {
+                false
+            }
+            differentMonths < 12 -> {
+                currentDate.dayOfMonth == checkDate.dayOfMonth
+            }
+            else -> {
+                currentDate.monthOfYear == checkDate.monthOfYear &&
+                        currentDate.dayOfMonth == checkDate.dayOfMonth
+            }
+        }
     }
 
     override suspend fun disconnectSocket() {
         withContext(Dispatchers.IO) {
             try {
-                webSocket?.close()
+                webSocketSession?.close()
                 webSocketScope?.cancel()
                 println("disconnect Socket: Closed")
             } catch (e: Exception) {
@@ -131,7 +159,8 @@ class ChildProfileRemoteSourceImpl @Inject constructor(
     }
 
     private companion object {
-        const val PATH_CHILD_PROFILE = "/nanit"
+        const val PATH_NANIT = "/nanit"
+        const val COMMAND_TO_GET_BIRTHDAY = "HappyBirthday"
 
         const val NINE_YEARS_IN_MONTH = 108
     }
