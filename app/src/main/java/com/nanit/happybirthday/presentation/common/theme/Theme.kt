@@ -1,70 +1,113 @@
 package com.nanit.happybirthday.presentation.common.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+import androidx.compose.runtime.CompositionLocalProvider
+import com.nanit.happybirthday.R
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val LightElephantYellowColorScheme = lightColorScheme(
+    background = Light_Yellow
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+private val LightFoxGreenColorScheme = lightColorScheme(
+    background = Light_Green
+)
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val LightPelicanBlueColorScheme = lightColorScheme(
+    background = Light_Blue
+)
+
+private val NeutralColorScheme = lightColorScheme(
+    primary = Light_Neutral_Primary,
+    secondary = Light_Neutral_Secondary,
+    tertiary = Light_Neutral_Tertiary,
+    background = Light_Neutral
+)
+
+@Composable
+fun NeutralTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = NeutralColorScheme
+    HappyBirthdayTheme(darkTheme, colors, content)
+}
+
+@Composable
+fun ElephantYellowTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = LightElephantYellowColorScheme
+    CompositionLocalProvider(
+        LocalImages provides LightElephantImages
+    ) {
+        HappyBirthdayTheme(darkTheme, colors, content)
+    }
+}
+
+@Composable
+fun FoxGreenTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = LightFoxGreenColorScheme
+    CompositionLocalProvider(
+        LocalImages provides LightFoxImages
+    ) {
+        HappyBirthdayTheme(darkTheme, colors, content)
+    }
+}
+
+@Composable
+fun PelicanBlueTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = LightPelicanBlueColorScheme
+    CompositionLocalProvider(
+        LocalImages provides LightPelicanImages
+    ) {
+        HappyBirthdayTheme(darkTheme, colors, content)
+    }
+}
+
+private val LightElephantImages = Images(
+    backgroundImage = R.drawable.bg_elephant_yellow,
+    addPhotoIcon = R.drawable.ic_add_photo_yellow,
+    faceHolder = R.drawable.ic_face_yellow,
+)
+
+private val LightFoxImages = Images(
+    backgroundImage = R.drawable.bg_fox_green,
+    addPhotoIcon = R.drawable.ic_add_photo_green,
+    faceHolder = R.drawable.ic_face_green,
+)
+
+private val LightPelicanImages = Images(
+    backgroundImage = R.drawable.bg_pelican_blue,
+    addPhotoIcon = R.drawable.ic_add_photo_blue,
+    faceHolder = R.drawable.ic_face_blue,
 )
 
 @Composable
 fun HappyBirthdayTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    colors: ColorScheme = NeutralColorScheme,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-        }
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colors,
         typography = Typography,
         content = content
     )
+}
+
+object ChildProfileTheme {
+    val images: Images
+        @Composable
+        get() = LocalImages.current
 }

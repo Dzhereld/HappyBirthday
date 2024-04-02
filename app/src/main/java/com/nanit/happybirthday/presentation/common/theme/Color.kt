@@ -2,10 +2,11 @@ package com.nanit.happybirthday.presentation.common.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val Light_Blue = Color(0xFFDAF1F6)
+val Light_Green = Color(0xFFC5E8DF)
+val Light_Yellow = Color(0xFFFEEFCB)
+val Light_Neutral = Color(0xFFFFFBFE)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val Light_Neutral_Primary = Color(0xFF6750A4)
+val Light_Neutral_Secondary = Color(0xFF625B71)
+val Light_Neutral_Tertiary = Color(0xFF7E5260)
