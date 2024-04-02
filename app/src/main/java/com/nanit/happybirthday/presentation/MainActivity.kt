@@ -1,4 +1,4 @@
-package com.nanit.happybirthday
+package com.nanit.happybirthday.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,12 +10,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.nanit.happybirthday.ui.theme.HappyBirthdayTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nanit.happybirthday.presentation.theme.HappyBirthdayTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val viewModel: MainViewModel = viewModel()
             HappyBirthdayTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
