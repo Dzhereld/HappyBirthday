@@ -1,4 +1,4 @@
-package com.nanit.happybirthday.presentation.theme
+package com.nanit.happybirthday.presentation.common.theme
 
 import androidx.compose.ui.graphics.Color
 

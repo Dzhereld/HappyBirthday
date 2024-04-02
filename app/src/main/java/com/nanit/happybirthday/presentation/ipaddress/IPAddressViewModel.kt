@@ -1,4 +1,4 @@
-package com.nanit.happybirthday.presentation
+package com.nanit.happybirthday.presentation.ipaddress
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -7,15 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.nanit.happybirthday.domain.entity.ThemeType
 import com.nanit.happybirthday.domain.repository.ChildProfileRepository
 import com.nanit.happybirthday.presentation.common.UiEvent
-import com.nanit.happybirthday.presentation.ipaddress.IPAddressUiEvent
-import com.nanit.happybirthday.presentation.ipaddress.IPAddressUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repository: ChildProfileRepository) :
+class IPAddressViewModel @Inject constructor(private val repository: ChildProfileRepository) :
     ViewModel() {
 
     private var _uiState = mutableStateOf<IPAddressUiState>(IPAddressUiState.Empty)

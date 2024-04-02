@@ -1,6 +1,8 @@
 package com.nanit.happybirthday.presentation.ipaddress
 
-sealed interface IPAddressUiState {
+import com.nanit.happybirthday.presentation.common.ScreenUiState
+
+sealed interface IPAddressUiState : ScreenUiState {
     data object Empty : IPAddressUiState
 
     data object Loading : IPAddressUiState

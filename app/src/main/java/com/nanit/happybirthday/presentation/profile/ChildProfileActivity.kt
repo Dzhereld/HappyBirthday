@@ -1,4 +1,4 @@
-package com.nanit.happybirthday.presentation
+package com.nanit.happybirthday.presentation.profile
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,23 +12,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nanit.happybirthday.presentation.ipaddress.IPAddressScreen
 import com.nanit.happybirthday.presentation.ipaddress.IPAddressUiState
-import com.nanit.happybirthday.presentation.theme.HappyBirthdayTheme
+import com.nanit.happybirthday.presentation.common.theme.HappyBirthdayTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class ChildProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val viewModel: MainViewModel = viewModel()
+            val viewModel: ChildProfileViewModel = viewModel()
+
+            val uiState = viewModel.uiState.value
+            if (uiState as? ChildProfileUiState == null) {
+                return@setContent
+            }
+
             HappyBirthdayTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    IPAddressScreen(
-                        state = viewModel.uiState.value,
+                    ChildProfileScreen(
+                        state = uiState,
                         onEvent = { uiEvent -> viewModel.handleUiEvent(uiEvent) }
                     )
                 }
