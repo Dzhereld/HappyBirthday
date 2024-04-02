@@ -5,15 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nanit.happybirthday.domain.entity.ThemeType
-import com.nanit.happybirthday.domain.repository.ChildProfileRepository
+import com.nanit.happybirthday.domain.repository.BirthdayRepository
 import com.nanit.happybirthday.presentation.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class IPAddressViewModel @Inject constructor(private val repository: ChildProfileRepository) :
+class IPAddressViewModel @Inject constructor(private val repository: BirthdayRepository) :
     ViewModel() {
 
     private var _uiState = mutableStateOf<IPAddressUiState>(IPAddressUiState.Empty)
@@ -47,8 +46,8 @@ class IPAddressViewModel @Inject constructor(private val repository: ChildProfil
     private suspend fun startObservingBirthdayEvent() {
         repository.observeBirthdayEvent()
             .collect { result ->
-                result.onSuccess { childProfile ->
-                    if (childProfile.theme != ThemeType.UNDEFINED)
+                result.onSuccess { birthdayEvent ->
+                    if (birthdayEvent.theme != ThemeType.UNDEFINED)
                         _uiState.value = IPAddressUiState.OpenBirthdayScreen
                     else
                         _uiState.value = IPAddressUiState.ErrorTheme

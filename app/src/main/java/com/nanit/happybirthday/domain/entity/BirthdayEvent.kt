@@ -1,6 +1,6 @@
 package com.nanit.happybirthday.domain.entity
 
-data class ChildProfile(
+data class BirthdayEvent(
     val name: String,
     val ageInMonths: Int,
     val theme: ThemeType

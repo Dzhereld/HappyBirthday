@@ -1,4 +1,4 @@
-package com.nanit.happybirthday.presentation.profile
+package com.nanit.happybirthday.presentation.birthday
 
 import android.os.Bundle
 import android.widget.Toast
@@ -19,8 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nanit.happybirthday.R
-import com.nanit.happybirthday.domain.entity.ChildProfile
-import com.nanit.happybirthday.domain.entity.ThemeType
+import com.nanit.happybirthday.domain.entity.BirthdayEvent
 import com.nanit.happybirthday.domain.entity.ThemeType.ELEPHANT
 import com.nanit.happybirthday.domain.entity.ThemeType.FOX
 import com.nanit.happybirthday.domain.entity.ThemeType.PELICAN
@@ -30,11 +29,11 @@ import com.nanit.happybirthday.presentation.common.theme.ElephantYellowTheme
 import com.nanit.happybirthday.presentation.common.theme.FoxGreenTheme
 import com.nanit.happybirthday.presentation.common.theme.NeutralTheme
 import com.nanit.happybirthday.presentation.common.theme.PelicanBlueTheme
-import com.nanit.happybirthday.presentation.profile.util.ChildProfilePreviewProvider
+import com.nanit.happybirthday.presentation.birthday.util.BirthdayPreviewProvider
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ChildProfileActivity : ComponentActivity() {
+class BirthdayActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
@@ -43,32 +42,32 @@ class ChildProfileActivity : ComponentActivity() {
             )
         )
         setContent {
-            val viewModel: ChildProfileViewModel = viewModel()
+            val viewModel: BirthdayViewModel = viewModel()
 
             val uiState = viewModel.uiState
-                .collectAsState(initial = ChildProfileUiState.Empty)
+                .collectAsState(initial = BirthdayUiState.Empty)
                 .value
 
-            if (uiState as? ChildProfileUiState == null) {
+            if (uiState as? BirthdayUiState == null) {
                 return@setContent
             }
 
             val data = when (uiState) {
-                ChildProfileUiState.Empty -> return@setContent
-                is ChildProfileUiState.Error -> {
+                BirthdayUiState.Empty -> return@setContent
+                is BirthdayUiState.Error -> {
                     val errorMessage = "An error occurred while processing the received message."
                     Toast.makeText(LocalContext.current, errorMessage, Toast.LENGTH_LONG).show()
                     uiState.oldData
                 }
 
-                is ChildProfileUiState.Filled -> uiState.data
+                is BirthdayUiState.Filled -> uiState.data
             }
 
             val onEvent: (UiEvent) -> Unit = { uiEvent -> viewModel.handleUiEvent(uiEvent) }
             when(data.theme) {
-                PELICAN -> PelicanBlueTheme { ChildProfileScreen(data, onEvent) }
-                FOX -> FoxGreenTheme { ChildProfileScreen(data, onEvent) }
-                ELEPHANT -> ElephantYellowTheme { ChildProfileScreen(data, onEvent) }
+                PELICAN -> PelicanBlueTheme { BirthdayScreen(data, onEvent) }
+                FOX -> FoxGreenTheme { BirthdayScreen(data, onEvent) }
+                ELEPHANT -> ElephantYellowTheme { BirthdayScreen(data, onEvent) }
                 UNDEFINED -> NeutralTheme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
@@ -84,11 +83,11 @@ class ChildProfileActivity : ComponentActivity() {
 
 @Composable
 @Preview(name = "original image", device = "spec:shape=Normal,width=361,height=592,unit=dp,dpi=480")
-fun ChildProfilesScreenPreview(@PreviewParameter(ChildProfilePreviewProvider::class) childProfile: ChildProfile) {
-    when(childProfile.theme) {
-        PELICAN -> PelicanBlueTheme { ChildProfileScreen(childProfile) }
-        FOX -> FoxGreenTheme { ChildProfileScreen(childProfile) }
-        ELEPHANT -> ElephantYellowTheme { ChildProfileScreen(childProfile) }
+fun BirthdayScreenPreview(@PreviewParameter(BirthdayPreviewProvider::class) birthdayEvent: BirthdayEvent) {
+    when(birthdayEvent.theme) {
+        PELICAN -> PelicanBlueTheme { BirthdayScreen(birthdayEvent) }
+        FOX -> FoxGreenTheme { BirthdayScreen(birthdayEvent) }
+        ELEPHANT -> ElephantYellowTheme { BirthdayScreen(birthdayEvent) }
         UNDEFINED -> Unit
     }
 }

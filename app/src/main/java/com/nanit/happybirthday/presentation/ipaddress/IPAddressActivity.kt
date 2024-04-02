@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nanit.happybirthday.presentation.common.theme.NeutralTheme
-import com.nanit.happybirthday.presentation.profile.ChildProfileActivity
+import com.nanit.happybirthday.presentation.birthday.BirthdayActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,7 +26,7 @@ class IPAddressActivity : ComponentActivity() {
             val uiState = viewModel.uiState.value
             if (uiState == IPAddressUiState.OpenBirthdayScreen) {
                 with(LocalContext.current) {
-                    startActivity(Intent(this, ChildProfileActivity::class.java)
+                    startActivity(Intent(this, BirthdayActivity::class.java)
                         .apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         })

@@ -106,7 +106,7 @@ fun HappyBirthdayTheme(
     )
 }
 
-object ChildProfileTheme {
+object BirthdayTheme {
     val images: Images
         @Composable
         get() = LocalImages.current

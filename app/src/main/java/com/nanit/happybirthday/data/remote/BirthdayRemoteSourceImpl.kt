@@ -1,8 +1,8 @@
 package com.nanit.happybirthday.data.remote
 
-import com.nanit.happybirthday.data.remote.entity.ChildProfileRemote
-import com.nanit.happybirthday.data.remote.entity.mapToChildProfile
-import com.nanit.happybirthday.domain.entity.ChildProfile
+import com.nanit.happybirthday.data.remote.entity.BirthdayEventRemote
+import com.nanit.happybirthday.data.remote.entity.mapToBirthdayEvent
+import com.nanit.happybirthday.domain.entity.BirthdayEvent
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.http.HttpMethod
@@ -30,11 +30,10 @@ import org.joda.time.DateTime
 import org.joda.time.Months
 import javax.inject.Inject
 
-class ChildProfileRemoteSourceImpl @Inject constructor(
+class BirthdayRemoteSourceImpl @Inject constructor(
     private val client: HttpClient
 ) :
-    ChildProfileRemoteSource {
-
+    BirthdayRemoteSource {
     private var webSocketSession: WebSocketSession? = null
 
     private var webSocketScope: CoroutineScope? = null
@@ -100,12 +99,12 @@ class ChildProfileRemoteSourceImpl @Inject constructor(
         }
     }
 
-    override fun observeBirthdayEvent(): Flow<Result<ChildProfile>> {
+    override fun observeBirthdayEvent(): Flow<Result<BirthdayEvent>> {
         return receiveMessageStateFlow.asStateFlow()
             .filter(String::isNotEmpty)
             .map { message ->
                 runCatching {
-                    Json.decodeFromString<ChildProfileRemote>(message)
+                    Json.decodeFromString<BirthdayEventRemote>(message)
                 }
             }
             .filter { result ->
@@ -113,7 +112,7 @@ class ChildProfileRemoteSourceImpl @Inject constructor(
                 return@filter verifyDate(epochTime)
             }
             .map { result ->
-                result.map(ChildProfileRemote::mapToChildProfile)
+                result.map(BirthdayEventRemote::mapToBirthdayEvent)
             }
     }
 

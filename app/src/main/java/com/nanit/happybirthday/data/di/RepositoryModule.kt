@@ -1,7 +1,7 @@
 package com.nanit.happybirthday.data.di
 
-import com.nanit.happybirthday.data.repository.ChildProfileRepositoryImpl
-import com.nanit.happybirthday.domain.repository.ChildProfileRepository
+import com.nanit.happybirthday.data.repository.BirthdayRepositoryImpl
+import com.nanit.happybirthday.domain.repository.BirthdayRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 interface RepositoryModule {
     @Binds
     @Singleton
-    fun provideChildProfileRepository(impl: ChildProfileRepositoryImpl): ChildProfileRepository
+    fun provideBirthdayRepository(impl: BirthdayRepositoryImpl): BirthdayRepository
 }

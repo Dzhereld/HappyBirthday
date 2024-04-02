@@ -1,4 +1,4 @@
-package com.nanit.happybirthday.presentation.profile
+package com.nanit.happybirthday.presentation.birthday
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -41,19 +41,19 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.nanit.happybirthday.R
-import com.nanit.happybirthday.domain.entity.ChildProfile
+import com.nanit.happybirthday.domain.entity.BirthdayEvent
 import com.nanit.happybirthday.domain.entity.ThemeType
 import com.nanit.happybirthday.presentation.common.UiEvent
-import com.nanit.happybirthday.presentation.common.theme.ChildProfileTheme
+import com.nanit.happybirthday.presentation.common.theme.BirthdayTheme
 import com.nanit.happybirthday.presentation.common.theme.ElephantYellowTheme
 import com.nanit.happybirthday.presentation.common.theme.FoxGreenTheme
 import com.nanit.happybirthday.presentation.common.theme.PelicanBlueTheme
-import com.nanit.happybirthday.presentation.profile.util.ChildProfilePreviewProvider
-import com.nanit.happybirthday.presentation.profile.util.DevicesPreview
+import com.nanit.happybirthday.presentation.birthday.util.BirthdayPreviewProvider
+import com.nanit.happybirthday.presentation.birthday.util.DevicesPreview
 
 @Composable
-fun ChildProfileScreen(
-    childProfile: ChildProfile,
+fun BirthdayScreen(
+    birthdayEvent: BirthdayEvent,
     onEvent: (UiEvent) -> Unit = {}
 ) {
     Surface(
@@ -101,11 +101,13 @@ fun ChildProfileScreen(
                 backgroundRef = backgroundRef,
                 onGloballyPositioned = { coordinates ->
                     with(localDensity) {
-                        childPhotoBottomSpaceHeightSizeDp = (coordinates.size.height * 0.22f).toDp()
-                        childPhotoSizeDp = (coordinates.size.width * 0.5678f).toDp()
-                        logoWidthSizeDp = (coordinates.size.width * 0.1625f).toDp()
-                        numberImageHeightSizeDp = (coordinates.size.height * 0.1485f).toDp()
-                        swirelsWidthSizeDp = (coordinates.size.width * 0.1390f).toDp()
+                        childPhotoBottomSpaceHeightSizeDp =
+                            (coordinates.size.height * childPhotoBottomSpaceHeightRatio).toDp()
+                        childPhotoSizeDp = (coordinates.size.width * childPhotoWidthRatio).toDp()
+                        logoWidthSizeDp = (coordinates.size.width * logoWidthRatio).toDp()
+                        numberImageHeightSizeDp =
+                            (coordinates.size.height * numberImageHeightRatio).toDp()
+                        swirelsWidthSizeDp = (coordinates.size.width * swirelsWidthRatio).toDp()
                     }
                 })
 
@@ -117,7 +119,7 @@ fun ChildProfileScreen(
             )
 
             AgeTextSection(
-                childProfile = childProfile,
+                birthdayEvent = birthdayEvent,
                 nameDateBirthColumnRef = ageTextSectionRef,
                 childPhotoRef = childPhotoRef,
                 numberImageHeightSizeDp = numberImageHeightSizeDp,
@@ -144,7 +146,7 @@ fun ConstraintLayoutScope.ChildPhoto(
             .wrapContentSize()
     ) {
         Image(
-            painter = painterResource(id = ChildProfileTheme.images.faceHolder),
+            painter = painterResource(id = BirthdayTheme.images.faceHolder),
             contentDescription = "Child Photo Image",
             modifier = Modifier
                 .width(childPhotoSizeDp)
@@ -163,7 +165,7 @@ private fun ConstraintLayoutScope.Background(
     onGloballyPositioned: (LayoutCoordinates) -> Unit
 ) {
     Image(
-        painter = painterResource(id = ChildProfileTheme.images.backgroundImage),
+        painter = painterResource(id = BirthdayTheme.images.backgroundImage),
         contentDescription = "Background Image",
         contentScale = ContentScale.FillWidth,
         modifier = Modifier
@@ -186,7 +188,7 @@ private fun ConstraintLayoutScope.Logo(
     childPhotoSizeDp: Dp,
 ){
     Image(
-        painter = painterResource(id = ChildProfileTheme.images.logo),
+        painter = painterResource(id = BirthdayTheme.images.logo),
         contentDescription = "Logo Image",
         contentScale = ContentScale.FillWidth,
         modifier = Modifier
@@ -202,7 +204,7 @@ private fun ConstraintLayoutScope.Logo(
 
 @Composable
 private fun ConstraintLayoutScope.AgeTextSection(
-    childProfile: ChildProfile,
+    birthdayEvent: BirthdayEvent,
     nameDateBirthColumnRef: ConstrainedLayoutReference,
     childPhotoRef: ConstrainedLayoutReference,
     numberImageHeightSizeDp: Dp,
@@ -227,21 +229,21 @@ private fun ConstraintLayoutScope.AgeTextSection(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val ageInYears = childProfile.ageInMonths / 12
+        val ageInYears = birthdayEvent.ageInMonths / 12
         val ageImage = if (ageInYears > 0) {
-            ChildProfileTheme.images.elevenNumberImageMap[ageInYears]
+            BirthdayTheme.images.elevenNumberImageMap[ageInYears]
         } else {
-            ChildProfileTheme.images.elevenNumberImageMap[childProfile.ageInMonths]
+            BirthdayTheme.images.elevenNumberImageMap[birthdayEvent.ageInMonths]
         }
 
-        TodayIsTitle(childProfile.name)
+        TodayIsTitle(birthdayEvent.name)
 
         AgeImage(
             swirelsWidthSizeDp = swirelsWidthSizeDp,
             ageImage = ageImage,
             numberImageHeightSizeDp = numberImageHeightSizeDp)
 
-        AgeOldTitle(ageInYears, childProfile.ageInMonths)
+        AgeOldTitle(ageInYears, birthdayEvent.ageInMonths)
     }
 
 }
@@ -285,7 +287,7 @@ private fun AgeImage(
         horizontalArrangement = Arrangement.Center,
     ) {
         Swirels(
-            imageId = ChildProfileTheme.images.leftSwirls,
+            imageId = BirthdayTheme.images.leftSwirls,
             widthSizeDp = swirelsWidthSizeDp,
             contentDescription = "Left Swirels image",
         )
@@ -300,7 +302,7 @@ private fun AgeImage(
             )
         }
         Swirels(
-            imageId = ChildProfileTheme.images.rightSwirls,
+            imageId = BirthdayTheme.images.rightSwirls,
             widthSizeDp = swirelsWidthSizeDp,
             contentDescription = "Right Swirels image",
         )
@@ -335,18 +337,25 @@ private fun TodayIsTitle(name: String) {
     )
 }
 
+// Define scaling factors or ratios
+private const val childPhotoBottomSpaceHeightRatio = 0.22f
+private const val childPhotoWidthRatio = 0.5678f
+private const val logoWidthRatio = 0.1625f
+private const val numberImageHeightRatio = 0.1485f
+private const val swirelsWidthRatio = 0.1390f
+
 @Composable
 @DevicesPreview
-fun ChildProfileScreenPreview(
+fun BirthdayPreview(
     @PreviewParameter(
-        ChildProfilePreviewProvider::class,
+        BirthdayPreviewProvider::class,
         1
-    ) childProfile: ChildProfile
+    ) birthdayEvent: BirthdayEvent
 ) {
-    when (childProfile.theme) {
-        ThemeType.PELICAN -> PelicanBlueTheme { ChildProfileScreen(childProfile) }
-        ThemeType.FOX -> FoxGreenTheme { ChildProfileScreen(childProfile) }
-        ThemeType.ELEPHANT -> ElephantYellowTheme { ChildProfileScreen(childProfile) }
+    when (birthdayEvent.theme) {
+        ThemeType.PELICAN -> PelicanBlueTheme { BirthdayScreen(birthdayEvent) }
+        ThemeType.FOX -> FoxGreenTheme { BirthdayScreen(birthdayEvent) }
+        ThemeType.ELEPHANT -> ElephantYellowTheme { BirthdayScreen(birthdayEvent) }
         ThemeType.UNDEFINED -> Unit
     }
 }

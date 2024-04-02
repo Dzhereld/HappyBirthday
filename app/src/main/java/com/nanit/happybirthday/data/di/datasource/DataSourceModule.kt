@@ -1,7 +1,7 @@
 package com.nanit.happybirthday.data.di.datasource
 
-import com.nanit.happybirthday.data.remote.ChildProfileRemoteSource
-import com.nanit.happybirthday.data.remote.ChildProfileRemoteSourceImpl
+import com.nanit.happybirthday.data.remote.BirthdayRemoteSource
+import com.nanit.happybirthday.data.remote.BirthdayRemoteSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class DataSourceModule {
     @Singleton
     @Provides
-    fun provideChildProfileRemoteSource(client: HttpClient): ChildProfileRemoteSource{
-        return ChildProfileRemoteSourceImpl(client)
+    fun provideBirthdayRemoteSource(client: HttpClient): BirthdayRemoteSource{
+        return BirthdayRemoteSourceImpl(client)
     }
 }
